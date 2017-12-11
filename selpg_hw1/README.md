@@ -58,9 +58,19 @@ output.txt:  输出文件
 
 使用以及测试
 ---
+节选四个用例:  
+
 1. ```./selpg -s 1 -e 1 -l 33 input.txt > output.txt ```
+
+![](https://github.com/CODEJY/ServiceComputing/blob/master/selpg_hw1/ScreenShot/1.png)
 2. ``` python test.py | ./selpg -s 1 -e 1 -l 43```
+
+![](https://github.com/CODEJY/ServiceComputing/blob/master/selpg_hw1/ScreenShot/2.png)
 3. ``` python test.py | ./selpg -s 1 -e 1 -l 43 > output.txt```
+
+![](https://github.com/CODEJY/ServiceComputing/blob/master/selpg_hw1/ScreenShot/3.png)
 4. ``` python test.py | ./selpg -s 1 -e 1 -f=true```
+
+![](https://github.com/CODEJY/ServiceComputing/blob/master/selpg_hw1/ScreenShot/4.png)
 
 
