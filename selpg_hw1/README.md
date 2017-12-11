@@ -1,10 +1,10 @@
 文件树
 ---
-test.py:  python脚本，用于生成输入内容input.txt，以及作为第三方程序产生输出然后传给selpg
-selpg.go:  主程序，包含所有代码
-selpg:  build之后产生的可执行文件
-input.txt:  输入文件
-output.txt:  输出文件
+* test.py:  python脚本，用于生成输入内容input.txt，以及作为第三方程序产生输出然后传给selpg
+* selpg.go:  主程序，包含所有代码
+* selpg:  build之后产生的可执行文件
+* input.txt:  输入文件
+* output.txt:  输出文件
 
 设计说明
 ---
