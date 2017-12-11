@@ -10,7 +10,8 @@ output.txt:  输出文件
 ---
 根据原作者的[文档说明](https://www.ibm.com/developerworks/cn/linux/shell/clutil/index.html)，使用go语言实现。  
 
-使用 flag 包对命令行参数进行解析，使用os，bufio对文件、os.Stdin进行读取，输出则调用os.Stdout.Write()，标准错误输出使用 fmt.Fprintf(os.Stderr, "error")。
+使用 flag 包对命令行参数进行解析，使用os，bufio对文件、os.Stdin进行读取，输出则调用os.Stdout.Write()，标准错误输出使用 fmt.Fprintf(os.Stderr, "error")。  
+
 整体流程：首先构造Selpg结构体，里面包含了必要的信息。在init()中初始化变量，在main()中执行flag.Parse()解析命令行输入的参数，并且检查参数是否合法。然后根据输入内容的类型，决定调用哪种输出读取方式。  
 
 关键代码部分
