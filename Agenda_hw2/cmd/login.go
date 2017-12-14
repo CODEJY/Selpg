@@ -58,7 +58,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	rootCmd.AddCommand(loginCmd)
+	RootCmd.AddCommand(loginCmd)
 	username = loginCmd.Flags().StringP("username", "u", "", "agenda username")
 	password = loginCmd.Flags().StringP("password", "p", "", "agenda password")
 

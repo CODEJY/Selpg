@@ -2,17 +2,9 @@ package service
 
 import (
 	"Agenda_hw2/entity"
-	"Agenda_hw2/loghelper"
-	"log"
 )
 
-var curuserinfoPath = "../data/curuser.txt"
-var errLog *log.Logger
 type Meeting entity.Meeting
-
-func init() {
-	errLog = loghelper.Error
-}
 
 func CreateMeeting(username string, title string, startDate string, endDate string, participator []string) bool {
 	for _, i := range participator {
@@ -20,10 +12,10 @@ func CreateMeeting(username string, title string, startDate string, endDate stri
 			errLog.Println("Create Meeting: sponsor can't be participator")
 			return false
 		}
-		l := entity.QueryUser(func (u *entity.User) bool{
+		l := entity.QueryUser(func(u *entity.User) bool {
 			return u.Name == i
 		})
-		if (len(l) == 0) {
+		if len(l) == 0 {
 			errLog.Println("Create Meeting: no such a user : ", i)
 			return false
 		}
@@ -38,12 +30,12 @@ func CreateMeeting(username string, title string, startDate string, endDate stri
 			}
 		}
 	}
-	sTime,err := entity.StringToDate(startDate)
+	sTime, err := entity.StringToDate(startDate)
 	if err != nil {
 		errLog.Println("Create Meeting: Wrong Date")
 		return false
 	}
-	eTime,err := entity.StringToDate(endDate)
+	eTime, err := entity.StringToDate(endDate)
 	if err != nil {
 		errLog.Println("Create Meeting: Wrong Date")
 		return false
@@ -53,7 +45,7 @@ func CreateMeeting(username string, title string, startDate string, endDate stri
 		return false
 	}
 	for _, p := range participator {
-		l := entity.QueryMeeting(func (m *entity.Meeting) bool {
+		l := entity.QueryMeeting(func(m *entity.Meeting) bool {
 			if m.Sponsor == p || m.IsParticipator(p) {
 				if m.StartDate.LessOrEqual(sTime) && m.EndDate.MoreThan(sTime) {
 					return true
@@ -68,18 +60,18 @@ func CreateMeeting(username string, title string, startDate string, endDate stri
 			return false
 		})
 		if len(l) > 0 {
-			errLog.Println("Create Meeting: ",p," time conflict")
+			errLog.Println("Create Meeting: ", p, " time conflict")
 			return false
 		}
 	}
-	tu := entity.QueryUser(func (u *entity.User) bool {
+	tu := entity.QueryUser(func(u *entity.User) bool {
 		return u.Name == username
 	})
 	if len(tu) == 0 {
 		errLog.Println("Create Meeting: Sponsor ", username, " not exist")
 		return false
 	}
-	l := entity.QueryMeeting(func (m *entity.Meeting) bool {
+	l := entity.QueryMeeting(func(m *entity.Meeting) bool {
 		if m.Sponsor == username || m.IsParticipator(username) {
 			if m.StartDate.LessOrEqual(sTime) && m.EndDate.MoreThan(sTime) {
 				return true
@@ -96,33 +88,33 @@ func CreateMeeting(username string, title string, startDate string, endDate stri
 
 	if len(l) > 0 {
 		errLog.Println("Create Meeting: ", username, " time conflict")
-		return false;
+		return false
 	}
-	entity.CreateMeeting(&entity.Meeting{username, participator,sTime,eTime, title})
+	entity.CreateMeeting(&entity.Meeting{username, participator, sTime, eTime, title})
 	if err := entity.Sync(); err != nil {
 		return false
 	}
 	return true
 }
 
-func QueryMeeting(username, startDate, endDate string) ([]entity.Meeting,bool) {
-	sTime,err := entity.StringToDate(startDate)
+func QueryMeeting(username, startDate, endDate string) ([]entity.Meeting, bool) {
+	sTime, err := entity.StringToDate(startDate)
 	var m []entity.Meeting
 	if err != nil {
 		errLog.Println("Query Meeting: Wrong StartDate")
-		return m,false
+		return m, false
 	}
-	eTime,err := entity.StringToDate(endDate)
+	eTime, err := entity.StringToDate(endDate)
 	if err != nil {
 		errLog.Println("Query Meeting: Wrong EndDate")
-		return m,false
+		return m, false
 	}
 	if eTime.LessThan(sTime) == true {
 		errLog.Println("Query Meeting: Start Time greater than end time")
 		return m, false
 	}
 
-	tm := entity.QueryMeeting(func (m *entity.Meeting) bool {
+	tm := entity.QueryMeeting(func(m *entity.Meeting) bool {
 		if m.Sponsor == username || m.IsParticipator(username) {
 			if m.StartDate.LessOrEqual(sTime) && m.EndDate.MoreThan(sTime) {
 				return true
@@ -136,35 +128,35 @@ func QueryMeeting(username, startDate, endDate string) ([]entity.Meeting,bool) {
 		}
 		return false
 	})
-	return tm,true
+	return tm, true
 }
 
 func DeleteMeeting(username, title string) int {
-	return entity.DeleteMeeting(func (m *entity.Meeting) bool {
+	return entity.DeleteMeeting(func(m *entity.Meeting) bool {
 		return m.Sponsor == username && m.Title == title
 	})
 }
 
 func QuitMeeting(username string, title string) bool {
-	flag :=entity.QueryMeeting(func (m *entity.Meeting) bool {
+	flag := entity.QueryMeeting(func(m *entity.Meeting) bool {
 		return m.Title == title && m.IsParticipator(username) == true
 	})
 	if len(flag) == 0 {
 		return false
 	}
-	entity.UpdateMeeting(func (m *entity.Meeting) bool {
+	entity.UpdateMeeting(func(m *entity.Meeting) bool {
 		return m.IsParticipator(username) == true && m.Title == title
-	}, func (m *entity.Meeting) {
+	}, func(m *entity.Meeting) {
 		m.DeleteParticipator(username)
 	})
-	entity.DeleteMeeting(func (m *entity.Meeting) bool {
+	entity.DeleteMeeting(func(m *entity.Meeting) bool {
 		return len(m.GetParticipator()) == 0
 	})
 	return true
 }
 
-func ClearMeeting(username string) (int,bool) {
-	cm := entity.DeleteMeeting(func (m *entity.Meeting) bool {
+func ClearMeeting(username string) (int, bool) {
+	cm := entity.DeleteMeeting(func(m *entity.Meeting) bool {
 		return m.Sponsor == username
 	})
 	if err := entity.Sync(); err != nil {
@@ -177,25 +169,25 @@ func ClearMeeting(username string) (int,bool) {
 
 func AddMeetingParticipator(username string, title string, participators []string) bool {
 	for _, p := range participators {
-		uc := entity.QueryUser(func (u *entity.User) bool {
+		uc := entity.QueryUser(func(u *entity.User) bool {
 			return u.Name == p
 		})
 		if len(uc) == 0 {
 			errLog.Println("Add Meeting Participator: No such a user: ", p)
 			return false
 		}
-		qm := entity.QueryMeeting(func (m *entity.Meeting) bool {
+		qm := entity.QueryMeeting(func(m *entity.Meeting) bool {
 			return m.Sponsor == username && m.Title == title && m.IsParticipator(p)
 		})
 		if len(qm) != 0 {
-			errLog.Println("Add Meeting Participator: ",p, "Already in meeting")
+			errLog.Println("Add Meeting Participator: ", p, "Already in meeting")
 			return false
 		}
 	}
-	mt := entity.UpdateMeeting(func (m *entity.Meeting) bool {
+	mt := entity.UpdateMeeting(func(m *entity.Meeting) bool {
 		return m.Sponsor == username && m.Title == title
-	}, func (m *entity.Meeting) {
-		for _,p := range participators {
+	}, func(m *entity.Meeting) {
+		for _, p := range participators {
 			m.AddParticipator(p)
 		}
 	})
@@ -211,24 +203,24 @@ func AddMeetingParticipator(username string, title string, participators []strin
 
 func RemoveMeetingParticipator(username string, title string, participators []string) bool {
 	for _, p := range participators {
-		uc := entity.QueryUser(func (u *entity.User) bool {
+		uc := entity.QueryUser(func(u *entity.User) bool {
 			return u.Name == p
 		})
 		if len(uc) == 0 {
 			errLog.Println("Remove Meeting Participator: No such a user: ", p)
 			return false
 		}
-		qm := entity.QueryMeeting(func (m *entity.Meeting) bool {
-			return m.Sponsor == username && m.Title == title  && m.IsParticipator(p)
+		qm := entity.QueryMeeting(func(m *entity.Meeting) bool {
+			return m.Sponsor == username && m.Title == title && m.IsParticipator(p)
 		})
 		if len(qm) == 0 {
 			errLog.Println("Remove Meeting Participator: Not in Meeting :", p)
 			return false
 		}
 	}
-	mt := entity.UpdateMeeting(func (m *entity.Meeting) bool {
+	mt := entity.UpdateMeeting(func(m *entity.Meeting) bool {
 		return m.Sponsor == username && m.Title == title
-	}, func (m *entity.Meeting) {
+	}, func(m *entity.Meeting) {
 		for _, p := range participators {
 			m.DeleteParticipator(p)
 		}

@@ -16,7 +16,7 @@ import (
 type UserFilter func(*User) bool
 
 // MeetingFilter : MeetingFilter types take an *User and return a bool value.
-//type MeetingFilter func(*Meeting) bool
+type MeetingFilter func(*Meeting) bool
 
 var userinfoPath = "../data/userinfo"
 var metinfoPath = "../data/meetinginfo"
@@ -27,8 +27,7 @@ var curUserName *string
 var dirty bool
 
 var uData []User
-
-//var mData []Meeting
+var mData []Meeting
 
 var errLog *log.Logger
 
@@ -118,7 +117,6 @@ func DeleteUser(filter UserFilter) int {
 	return count
 }
 
-/*
 // CreateMeeting : create a meeting
 // @param a meeting object
 func CreateMeeting(v *Meeting) {
@@ -136,14 +134,14 @@ func QueryMeeting(filter MeetingFilter) []Meeting {
 			met = append(met, v)
 		}
 	}
-	return met;
+	return met
 }
 
 // UpdateMeeting : update meetings
 // @param a lambda function as the filter
 // @param a lambda function as the method to update the meeting
 // @return the number of updated meetings
-func UpdateMeeting(filter MeetingFilter, switcher func (*Meeting)) int {
+func UpdateMeeting(filter MeetingFilter, switcher func(*Meeting)) int {
 	count := 0
 	for i := 0; i < len(mData); i++ {
 		if v := &mData[i]; filter(v) {
@@ -178,7 +176,7 @@ func DeleteMeeting(filter MeetingFilter) int {
 	}
 	return count
 }
-*/
+
 // GetCurUser : get current user
 // @return the current user
 // @return error if current user does not exist
@@ -245,9 +243,9 @@ func writeToFile() error {
 		if err := writeJSON(userinfoPath, uData); err != nil {
 			e = append(e, err)
 		}
-		/*if err := writeJSON(metinfoPath, mData); err != nil {
+		if err := writeJSON(metinfoPath, mData); err != nil {
 			e = append(e, err)
-		}*/
+		}
 	}
 	if len(e) == 0 {
 		return nil
@@ -285,15 +283,14 @@ func readMet() error {
 	}
 	defer file.Close()
 
-	//dec := json.NewDecoder(file)
-	/*switch err := dec.Decode(&mData); err {
+	dec := json.NewDecoder(file)
+	switch err := dec.Decode(&mData); err {
 	case nil, io.EOF:
 		return nil
 	default:
 		errLog.Println("Decode Met Fail:", err)
 		return err
-	}*/
-	return err
+	}
 }
 
 func writeJSON(fpath string, data interface{}) error {

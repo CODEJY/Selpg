@@ -10,7 +10,6 @@ var curuserinfoPath = "../data/curuser.txt"
 var errLog *log.Logger
 
 type User entity.User
-type Meeting entity.Meeting
 
 func init() {
 	errLog = loghelper.Error
