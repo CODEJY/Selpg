@@ -18,9 +18,9 @@ type UserFilter func(*User) bool
 // MeetingFilter : MeetingFilter types take an *User and return a bool value.
 type MeetingFilter func(*Meeting) bool
 
-var userinfoPath = "../data/userinfo"
-var metinfoPath = "../data/meetinginfo"
-var curUserPath = "../data/curUser.txt"
+var userinfoPath = "/src/Agenda_hw2/data/userinfo"
+var metinfoPath = "/src/Agenda_hw2/data/meetinginfo"
+var curUserPath = "/src/Agenda_hw2/data/curUser.txt"
 
 var curUserName *string
 
