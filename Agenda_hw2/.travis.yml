@@ -1,8 +1,7 @@
 language: go
 
 go:
-  - 1.9
-  - tip
+  - master
 
 notifications:
   email: false
@@ -11,10 +10,10 @@ go_import_path:
   #/
 
 before_install:
-  - mv $HOME/gopath/src/hw/Agenda_hw2 $HOME/gopath/src
+  - mv $HOME/gopath/src/github.com/CODEJY/ServiceComputing/Agenda_hw2 $HOME/gopath/src
 
 #install: true
 
 script:
-  - cd $HOME/gopath/src/hw/Agenda_hw2
+  - cd $HOME/gopath/src/github.com/CODEJY/ServiceComputing/Agenda_hw2 
   - go test -v ./...
